@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@mapbox/react-native-mapbox-gl@jesseditson/react-native-mapbox-gl#v6_cocoapods":
+  version "6.0.0"
+  resolved "https://codeload.github.com/jesseditson/react-native-mapbox-gl/tar.gz/d8ee12fce8209e176e4cf65d82417aa0db4dd99b"
+  dependencies:
+    "@turf/helpers" "4.6.0"
+
+"@turf/helpers@4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-4.6.0.tgz#12398733b8ae28420df6166fa44c7ee8ffd6414c"
+
 abab@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
