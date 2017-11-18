@@ -11,47 +11,54 @@ import {
   Text,
   View
 } from 'react-native';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import MapboxGL from '@mapbox/react-native-mapbox-gl';
 
 export default class App extends Component<{}> {
+  constructor (props) {
+    super(props);
+    this.state = {
+      isFetchingAndroidPermission: Platform.OS === 'android',
+      isAndroidPermissionGranted: false,
+    };
+  }
+  async componentWillMount () {
+    if (Platform.OS === 'android') {
+      const isGranted = await MapboxGL.requestAndroidLocationPermissions();
+      this.setState({
+        isAndroidPermissionGranted: isGranted,
+        isFetchingAndroidPermission: false,
+      });
+    }
+    MapboxGL.setAccessToken("pk.NO_ACCESS_TOKEN");
+  }
   render() {
+    if (Platform.OS === 'android' && !this.state.isAndroidPermissionGranted) {
+      if (this.state.isFetchingAndroidPermission) {
+        return null;
+      }
+      return (
+        <View style={{flex: 1}}>
+          <Text style={styles.noPermissionsText}>
+            You need to accept location permissions in order to use this example applications
+          </Text>
+        </View>
+      );
+    }
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>
+      <MapboxGL.MapView
+        zoomLevel={16}
+        centerCoordinate={[139.766403, 35.681262]}
+        styleURL="PATH TO YOUR style.json"
+        style={{flex: 1}}
+      />
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  noPermissionsText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
